@@ -15,9 +15,13 @@ import educationRoutes from './server/routes/education.routes.js';
 import projectRoutes   from './server/routes/project.routes.js';
 import contactRoutes  from './server/routes/contact.routes.js';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 dotenv.config();
 
 const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // CORS – allow React dev server
 app.use(cors({
@@ -58,6 +62,14 @@ mongoose.connect(
 )
 .then(() => console.log('MongoDB connected'))
 .catch(err => console.error(err));
+
+// Serve static files from Vite build
+app.use(express.static(path.join(__dirname, 'client', 'dist')));
+
+// Fallback to index.html for SPA
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+});
 
 export default app;
 
