@@ -49,8 +49,13 @@ app.get('/index.html', (req, res) => {
 // 3) Serve your built frontend
 app.use(express.static(path.join(__dirname, 'client', 'dist')));
 
+app.use(
+  '/assets',
+  express.static(path.join(__dirname, 'client', 'dist', 'assets'))
+);
+
 // 4) SPA fallback (must come after static + API)
-app.get(/^(?!\/api\/).*/, (req, res) => {
+app.get(/^(?!\/(?:api|assets|vite\.svg|index\.html)\/?).*/, (req, res) => {
   res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
 });
 
