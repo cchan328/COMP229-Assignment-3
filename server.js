@@ -5,12 +5,20 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 
 dotenv.config();
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname  = path.dirname(__filename);
+
+const staticDir = path.join(__dirname, 'client', 'dist');
+console.log('🔍 Static dir:', staticDir);
+console.log('📂 Exists:', fs.existsSync(staticDir));
+console.log('📂 Contents:', fs.existsSync(staticDir) ? fs.readdirSync(staticDir) : []);
+
+app.get('/health', (req, res) => res.send('OK'));
 
 // 1) Core middleware
 app.use(cors({
@@ -32,6 +40,10 @@ app.use('/api/users',      userRoutes);
 app.use('/api/educations', educationRoutes);
 app.use('/api/projects',   projectRoutes);
 app.use('/api/contacts',   contactRoutes);
+
+app.get('/index.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+});
 
 // 3) Serve your built frontend
 app.use(express.static(path.join(__dirname, 'client', 'dist')));
