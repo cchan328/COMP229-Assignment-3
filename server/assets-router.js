@@ -1,15 +1,23 @@
 import express from "express";
-//const express = require("express");
+
 const router = express.Router();
-const imageRegex = /\/.+\.(svg|png|jpg|png|jpeg)$/; // You can add other image formats
-const videoRegex = /\/.+\.(mp4|ogv)$/;
-router.get(imageRegex, (req, res) => {
+
+// Check for supported image or video file extensions
+const isImage = (filePath) =>
+  filePath.match(/\.(svg|png|jpg|jpeg)$/i);
+
+const isVideo = (filePath) =>
+  filePath.match(/\.(mp4|ogv)$/i);
+
+router.get('*', (req, res) => {
   const filePath = req.path;
-  res.redirect(303, `http://localhost:3000/src${filePath}`);
+
+  if (isImage(filePath) || isVideo(filePath)) {
+    res.redirect(303, `http://localhost:3000/src${filePath}`);
+  } else {
+    res.status(404).send('Asset not found');
+  }
 });
-router.get(videoRegex, (req, res) => {
-  const filePath = req.path;
-  res.redirect(303, `http://localhost:3000/src${filePath}`);
-});
-//module.exports = router;
+
 export default router;
+
