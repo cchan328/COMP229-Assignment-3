@@ -1,23 +1,21 @@
-import express from "express";
-
+import express from 'express';
 const router = express.Router();
 
-// Check for supported image or video file extensions
-const isImage = (filePath) =>
-  filePath.match(/\.(svg|png|jpg|jpeg)$/i);
-
-const isVideo = (filePath) =>
-  filePath.match(/\.(mp4|ogv)$/i);
-
-router.get('*', (req, res) => {
+// Middleware to handle image and video asset redirection
+router.use((req, res, next) => {
   const filePath = req.path;
+  // Match common image and video extensions
+  const assetPattern = /\.(svg|png|jpg|jpeg|mp4|ogv)$/i;
 
-  if (isImage(filePath) || isVideo(filePath)) {
-    res.redirect(303, `http://localhost:3000/src${filePath}`);
-  } else {
-    res.status(404).send('Asset not found');
+  if (assetPattern.test(filePath)) {
+    // Redirect asset requests to the correct /src path
+    return res.redirect(303, `http://localhost:3000/src${filePath}`);
   }
+
+  // Not an asset URL, continue to next middleware or route
+  next();
 });
 
 export default router;
+
 
