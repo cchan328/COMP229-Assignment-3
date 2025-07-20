@@ -23,6 +23,14 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Serve static files from Vite build
+app.use(express.static(path.join(__dirname, 'client', 'dist')));
+
+// Fallback to index.html for SPA
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+});
+
 // CORS – allow React dev server
 app.use(cors({
   origin: 'http://localhost:5173',
@@ -63,13 +71,7 @@ mongoose.connect(
 .then(() => console.log('MongoDB connected'))
 .catch(err => console.error(err));
 
-// Serve static files from Vite build
-app.use(express.static(path.join(__dirname, 'client', 'dist')));
 
-// Fallback to index.html for SPA
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
-});
 
 export default app;
 
