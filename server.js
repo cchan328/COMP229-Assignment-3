@@ -37,9 +37,10 @@ app.use('/api/contacts',   contactRoutes);
 app.use(express.static(path.join(__dirname, 'client', 'dist')));
 
 // 4) SPA fallback (must come after static + API)
-app.get('/*', (req, res) => {
+app.get(/^(?!\/api\/).*/, (req, res) => {
   res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
 });
+
 
 
 // 5) Start and connect DB
