@@ -30,3 +30,4 @@ export const deleteAllContacts = async (req, res) => {
   await Contact.deleteMany({});
   res.json({ message: 'All contacts deleted' });
 };
+

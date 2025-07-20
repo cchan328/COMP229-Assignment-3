@@ -1,13 +1,8 @@
-/*contact.jsx
-Name: Chun YU Clement Chan
-Student ID: 301454624
-Date: 27/5/2025*/
-
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import api from './api/api';
 
-function Contact() {
+export default function Contact() {
   const [formData, setFormData] = useState({
     firstName: '', lastName: '', email: '', phone: '', message: ''
   });
@@ -18,10 +13,16 @@ function Contact() {
     setFormData(f => ({ ...f, [name]: value }));
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    console.log(formData);
-    navigate('/');
+    try {
+      await api.post('/contacts', formData);
+      alert('Message sent!');
+      navigate('/');
+    } catch (err) {
+      console.error('Submit failed:', err);
+      alert('Failed to send message.');
+    }
   };
 
   return (
@@ -32,48 +33,28 @@ function Contact() {
 
       <form className="contact-form" onSubmit={handleSubmit}>
         <input
-          name="firstName"
-          type="text"
-          placeholder="First Name"
-          value={formData.firstName}
-          onChange={handleChange}
-          required
+          name="firstName" type="text" placeholder="First Name"
+          value={formData.firstName} onChange={handleChange} required
         />
         <input
-          name="lastName"
-          type="text"
-          placeholder="Last Name"
-          value={formData.lastName}
-          onChange={handleChange}
-          required
+          name="lastName" type="text" placeholder="Last Name"
+          value={formData.lastName} onChange={handleChange} required
         />
         <input
-          name="email"
-          type="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
+          name="email" type="email" placeholder="Email"
+          value={formData.email} onChange={handleChange} required
         />
         <input
-          name="phone"
-          type="text"
-          placeholder="Contact Number"
-          value={formData.phone}
-          onChange={handleChange}
+          name="phone" type="text" placeholder="Contact Number"
+          value={formData.phone} onChange={handleChange}
         />
         <textarea
-          name="message"
-          placeholder="Message"
-          value={formData.message}
-          onChange={handleChange}
-          required
+          name="message" placeholder="Message"
+          value={formData.message} onChange={handleChange} required
         />
         <button type="submit">Send</button>
       </form>
     </div>
   );
 }
-
-export default Contact;
 

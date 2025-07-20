@@ -1,3 +1,5 @@
+
+
 import express from 'express';
 import {
   getAllUsers,
@@ -10,11 +12,23 @@ import {
 
 const router = express.Router();
 
-router.get('/api/users', getAllUsers);
-router.get('/api/users/:id', getUserById);
-router.post('/api/users', createUser);
-router.put('/api/users/:id', updateUser);
-router.delete('/api/users/:id', deleteUserById);
-router.delete('/api/users', deleteAllUsers);
+
+router.get('/', getAllUsers);
+
+
+router.get('/:id', getUserById);
+
+
+router.post('/', createUser);
+
+
+router.put('/:id', updateUser);
+
+
+router.delete('/:id', deleteUserById);
+
+
+router.delete('/', deleteAllUsers);
 
 export default router;
+

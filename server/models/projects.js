@@ -1,12 +1,16 @@
+
 import mongoose from 'mongoose';
 
 const projectSchema = new mongoose.Schema({
-  title: String,
-  firstname: String,
-  lastname: String,
-  email: String,
-  completion: Date,
-  description: String
+  title:      { type: String, required: true },
+  firstname:  { type: String, required: true },
+  lastname:   { type: String, required: true },
+  email:      { type: String, required: true },
+  completion: { type: Date,   required: true },
+  description:{ type: String, required: true }
+}, {
+  timestamps: true    
 });
 
 export default mongoose.model('Project', projectSchema);
+

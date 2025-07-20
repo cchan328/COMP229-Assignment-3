@@ -1,20 +1,28 @@
+// server/routes/education.routes.js
 import express from 'express';
 import {
-  getAllEducations,
+  getAllEducation,
   getEducationById,
   createEducation,
   updateEducation,
-  deleteEducationById,
-  deleteAllEducations
+  deleteEducation
 } from '../controllers/education.controller.js';
 
 const router = express.Router();
 
-router.get('/api/educations', getAllEducations);
-router.get('/api/educations/:id', getEducationById);
-router.post('/api/educations', createEducation);
-router.put('/api/educations/:id', updateEducation);
-router.delete('/api/educations/:id', deleteEducationById);
-router.delete('/api/educations', deleteAllEducations);
+
+router.get('/', getAllEducation);
+
+
+router.get('/:id', getEducationById);
+
+
+router.post('/', createEducation);
+
+
+router.put('/:id', updateEducation);
+
+
+router.delete('/:id', deleteEducation);
 
 export default router;
