@@ -1,32 +1,30 @@
-import Education from '../models/education.js'; 
 
-export const getAllEducations = async (req, res) => {
-  const educations = await Education.find();
-  res.json(educations);
+import Education from '../models/education.js';
+
+export const getAllEducation = async (req, res) => {
+  const eds = await Education.find();
+  res.json(eds);
 };
 
 export const getEducationById = async (req, res) => {
-  const education = await Education.findById(req.params.id);
-  res.json(education);
+  const ed = await Education.findById(req.params.id);
+  if (!ed) return res.status(404).json({ error: 'Not found' });
+  res.json(ed);
 };
 
 export const createEducation = async (req, res) => {
-  const education = new Education(req.body);
-  await education.save();
-  res.json(education);
+  const ed = new Education(req.body);
+  await ed.save();
+  res.status(201).json(ed);
 };
 
 export const updateEducation = async (req, res) => {
-  const updated = await Education.findByIdAndUpdate(req.params.id, req.body, { new: true });
-  res.json(updated);
+  const ed = await Education.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  if (!ed) return res.status(404).json({ error: 'Not found' });
+  res.json(ed);
 };
 
-export const deleteEducationById = async (req, res) => {
+export const deleteEducation = async (req, res) => {
   await Education.findByIdAndDelete(req.params.id);
-  res.json({ message: 'education deleted' });
-};
-
-export const deleteAllEducations = async (req, res) => {
-  await Education.deleteMany({});
-  res.json({ message: 'All educations deleted' });
+  res.json({ message: 'Deleted' });
 };

@@ -10,11 +10,17 @@ import {
 
 const router = express.Router();
 
-router.get('/api/contacts', getAllContacts);
-router.get('/api/contacts/:id', getContactById);
-router.post('/api/contacts', createContact);
-router.put('/api/contacts/:id', updateContact);
-router.delete('/api/contacts/:id', deleteContactById);
-router.delete('/api/contacts', deleteAllContacts);
+
+router.post('/', createContact);
+
+router.get('/', getAllContacts);
+
+router.get('/:id', getContactById);
+
+router.put('/:id', updateContact);
+
+router.delete('/:id', deleteContactById);
+
+router.delete('/', deleteAllContacts);
 
 export default router;

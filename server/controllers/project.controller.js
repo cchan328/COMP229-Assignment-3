@@ -1,32 +1,67 @@
+
+
+
 import Project from '../models/projects.js';
 
+
 export const getAllProjects = async (req, res) => {
-  const projects = await Project.find();
-  res.json(projects);
+  try {
+    const projects = await Project.find();
+    res.json(projects);
+  } catch (err) {
+    console.error('Get all projects error:', err);
+    res.status(500).json({ error: 'Failed to fetch projects' });
+  }
 };
+
 
 export const getProjectById = async (req, res) => {
-  const project = await Project.findById(req.params.id);
-  res.json(project);
+  try {
+    const project = await Project.findById(req.params.id);
+    if (!project) return res.status(404).json({ error: 'Not found' });
+    res.json(project);
+  } catch (err) {
+    console.error('Get project error:', err);
+    res.status(500).json({ error: 'Failed to fetch project' });
+  }
 };
+
 
 export const createProject = async (req, res) => {
-  const project = new Project(req.body);
-  await project.save();
-  res.json(project);
+  try {
+    const proj = new Project(req.body);
+    await proj.save();
+    res.status(201).json(proj);
+  } catch (err) {
+    console.error('Create project error:', err);
+    res.status(500).json({ error: 'Failed to create project' });
+  }
 };
+
 
 export const updateProject = async (req, res) => {
-  const updated = await Project.findByIdAndUpdate(req.params.id, req.body, { new: true });
-  res.json(updated);
+  try {
+    const updated = await Project.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    if (!updated) return res.status(404).json({ error: 'Not found' });
+    res.json(updated);
+  } catch (err) {
+    console.error('Update project error:', err);
+    res.status(500).json({ error: 'Failed to update project' });
+  }
 };
 
-export const deleteProjectById = async (req, res) => {
-  await Project.findByIdAndDelete(req.params.id);
-  res.json({ message: 'Project deleted' });
+
+export const deleteProject = async (req, res) => {
+  try {
+    await Project.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Deleted' });
+  } catch (err) {
+    console.error('Delete project error:', err);
+    res.status(500).json({ error: 'Failed to delete project' });
+  }
 };
 
-export const deleteAllProjects = async (req, res) => {
-  await Project.deleteMany({});
-  res.json({ message: 'All projects deleted' });
-};

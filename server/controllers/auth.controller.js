@@ -1,33 +1,66 @@
+
+
 import User from '../models/user.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
-const JWT_SECRET = 'secertkey'; 
-
 export const signIn = async (req, res) => {
-  
-  
-    try {
+  try {
     const { email, password } = req.body;
-    console.log("SIGNIN HIT >>>", req.body);
-    // Check if user exists
+
+
     const user = await User.findOne({ email });
-    if (!user) return res.status(401).json({ error: 'User not found' });
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
 
-    // Validate password
-    const match = await bcrypt.compare(password, user.password);
-    if (!match) return res.status(401).json({ error: 'Invalid password' });
 
-    // Create token
-    const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '2h' });
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
 
-    res.json({ token, user: { name: user.name, email: user.email } });
+
+    const token = jwt.sign(
+      { _id: user._id, role: user.role },
+      process.env.JWT_SECRET || 'JWT_SECRET',
+      { expiresIn: '1h' }
+    );
+
+
+    res
+      .cookie('token', token, { httpOnly: true })
+      .status(200)
+      .json({
+        token,
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role
+        }
+      });
   } catch (err) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Signin error:', err);
+    res.status(500).json({ error: 'Signin failed' });
   }
 };
 
 export const signOut = (req, res) => {
-  res.clearCookie('token');
-  res.json({ message: 'Signed out successfully' });
+  res.clearCookie('token').json({ message: 'Signed out successfully' });
 };
+
+export const requireSignin = (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) throw new Error('No token provided');
+    const token = authHeader.split(' ')[1];
+    req.auth = jwt.verify(token, process.env.JWT_SECRET || 'JWT_SECRET');
+    next();
+  } catch (err) {
+    console.error('Auth error:', err);
+    res.status(401).json({ error: 'Unauthorized' });
+  }
+};
+
+
