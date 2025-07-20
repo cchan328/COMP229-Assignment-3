@@ -19,6 +19,7 @@ console.log('📂 Exists:', fs.existsSync(staticDir));
 console.log('📂 Contents:', fs.existsSync(staticDir) ? fs.readdirSync(staticDir) : []);
 
 app.get('/health', (req, res) => res.send('OK'));
+app.get('/test', (req, res) => res.send('Static is working'));
 
 // 1) Core middleware
 app.use(cors({
