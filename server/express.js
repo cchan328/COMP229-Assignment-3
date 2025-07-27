@@ -24,5 +24,5 @@ app.use(projectRoutes);
 app.use(educationRoutes);
 app.use(userRoutes);
 app.use(authRoutes);
-
+app.use(express.static(path.join(CURRENT_WORKING_DIR, "dist/app")));
 export default app;

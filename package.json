@@ -5,18 +5,24 @@
   "main": "index.js",
   "author": "Blessing",
   "license": "MIT",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.27.1",
     "@babel/preset-env": "^7.27.2",
+    "@playwright/test": "^1.54.1",
+    "@types/node": "^24.1.0",
     "babel-loader": "^10.0.0",
     "concurrently": "^9.1.2",
     "nodemon": "^3.1.10"
   },
   "scripts": {
     "dev": "concurrently 'vite' \"nodemon server.js\"",
-    "build": "vite build",
+    "build": "cd client && yarn install && yarn run build",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "node server.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
@@ -24,6 +30,7 @@
     "compression": "^1.8.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.0",
     "express": "^5.1.0",
     "global": "^4.4.0",
     "helmet": "^8.1.0",
